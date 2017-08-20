@@ -27,7 +27,8 @@ passport.use(
     {
       clientID: keys.googleClientID,
       clientSecret: keys.googleClientSecret,
-      callbackURL: '/auth/google/callback' //user comes back from google after granting permission for our app to acess details,
+      callbackURL: '/auth/google/callback', //user comes back from google after granting permission for our app to acess details,
+      proxy: true //tells google to trust the heroku proxy and allow it to be https (secured)
     }, //and hits this endpoint in order for us to pull off the specific code to grab the info of the user from google
     (accessToken, refreshToken, profile, done) => {
       //Callback fn automatically called when user redirected to our site from google
