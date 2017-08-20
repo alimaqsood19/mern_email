@@ -15,6 +15,7 @@ module.exports = app => {
 
   app.get('/api/logout', (req, res) => {
     req.logout(); //passport adds the logout method to the req object, logs out that user kills the cookie
+    res.send('Logged out');
   });
 
   //User that went through OAuth flow
