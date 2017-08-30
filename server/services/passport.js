@@ -30,29 +30,18 @@ passport.use(
       callbackURL: '/auth/google/callback', //user comes back from google after granting permission for our app to acess details,
       proxy: true //tells google to trust the heroku proxy and allow it to be https (secured)
     }, //and hits this endpoint in order for us to pull off the specific code to grab the info of the user from google
-    (accessToken, refreshToken, profile, done) => {
+    async (accessToken, refreshToken, profile, done) => {
       //Callback fn automatically called when user redirected to our site from google
       //allows us to create a new user in our database, accessToken allows us to access users email etc
       //refreshToken automatically updates the accessToken as it does expire
       //profile has all the identifying information of the user, it has that unique google id that we will add to our db
-      User.findOne({ googleId: profile.id }) //making sure user doesnt already exist in DB
-        .then(existingUser => {
-          if (existingUser) {
-            done(null, existingUser); //done() tells passport that we are done authenticating, first argument is for errors
-          } else {
-            new User({
-              //Saves user to DB using google ID thats provided by the callback
-              googleId: profile.id
-            })
-              .save()
-              .then(user => {
-                done(null, user);
-              });
-          }
-        })
-        .catch(err => {
-          console.log(err);
-        });
+      const existingUser = await User.findOne({ googleId: profile.id }); //making sure user doesnt already exist in DB
+
+      if (existingUser) {
+        return done(null, existingUser); //done() tells passport that we are done authenticating, first argument is for errors
+      }
+      const user = await new User({ googleId: profile.id }).save(); //Saves user to DB using google ID thats provided by the callback
+      done(null, user);
     }
   )
 ); //Creating new instance of google passport auth strategy

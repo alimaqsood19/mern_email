@@ -10,12 +10,18 @@ module.exports = app => {
     })
   );
 
-  //callback after user grants permission, passport exchanges code with user info
-  app.get('/auth/google/callback', passport.authenticate('google')); //google strategy grabs the code exchanges the code for the users profile info
+  //callback after user grants permission, passport exchanges code with user info, passport.authenticate('google') is a middleware
+  app.get(
+    '/auth/google/callback',
+    passport.authenticate('google'),
+    (req, res) => {
+      res.redirect('/surveys');
+    }
+  ); //google strategy grabs the code exchanges the code for the users profile info
 
   app.get('/api/logout', (req, res) => {
     req.logout(); //passport adds the logout method to the req object, logs out that user kills the cookie
-    res.send('Logged out');
+    res.redirect('/');
   });
 
   //User that went through OAuth flow
