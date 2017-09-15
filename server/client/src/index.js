@@ -7,6 +7,8 @@ import reduxThunk from 'redux-thunk';
 
 import App from './components/App.js';
 import reducers from './reducers/index.js';
+import axios from 'axios';
+window.axios = axios;
 
 const store = createStore(reducers, {}, applyMiddleware(reduxThunk)); //Redux Store that holds application state/data
 

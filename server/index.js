@@ -1,10 +1,12 @@
 const express = require('express');
 require('./models/user.js'); //Need to import user model schema first otherwise below passport will reference something that hasnt been loaded
+require('./models/Survey');
 require('./services/passport.js'); //Loads the user model schema so need to import the model first (above)
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const authRoutes = require('./routes/authRoutes.js');
 const billingRoutes = require('./routes/billingRoutes.js');
+const surveyRoutes = require('./routes/surveyRoutes.js');
 const { mongodbURI } = require('./config/keys');
 const { cookieKey } = require('./config/keys.js');
 const cookieSession = require('cookie-session'); //Tells express that we are using cookies and gives us access to them
@@ -31,6 +33,7 @@ app.use(passport.session()); //transform req.user object to contain user informa
 
 authRoutes(app); //passing in the express app object to allow the authRoutes endpoints to be included
 billingRoutes(app);
+surveyRoutes(app);
 
 if (process.env.NODE_ENV === 'production') {
   // Express will serve up production assets like our main.js file or main.css file
